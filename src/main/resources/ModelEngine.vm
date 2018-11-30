@@ -1,0 +1,26 @@
+${Package}
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+${Imports}
+
+import javax.annotation.Generated;
+
+@Generated("${GeneratedStatement}")
+@Setter
+@Getter
+@EqualsAndHashCode
+@ToString
+public class ${ClassNameUpper}${ModelType} {
+   #foreach ($attrEntry in $attrMap.entrySet())
+    #if($attrEntry.value.jsonAttributeName)
+    @JsonProperty("$attrEntry.value.jsonAttributeName")
+    #end
+    private $attrEntry.value.type ${attrEntry.key};
+    
+   #end
+}

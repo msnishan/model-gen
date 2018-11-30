@@ -1,0 +1,54 @@
+{
+  "basePackage":"com.msnishan.gen",
+  "models":[
+    {
+      "package":"com.msnishan.gen",
+      "name":"Address",
+      "type":"DTO",
+      "attributes":[
+        {
+          "name": "addressLine1",
+          "jsonAttributeName":"AddressLine1",
+          "type":"String"
+        },
+        {
+          "name": "addressLine2",
+          "jsonAttributeName":"AddressLine2",
+          "type":"String"
+        },
+        {
+          "name": "pinCode",
+          "jsonAttributeName":"PinCode",
+          "type":"long"
+        }
+      ]
+    },
+    {
+      "package": "com.msnishan.gen",
+      "name": "User",
+      "type": "DTO",
+      "attributes":[
+        {
+          "name": "firstName",
+          "type": "String"
+        },
+        {
+          "name": "lastName",
+          "type": "String"
+        },
+        {
+          "name": "mailId",
+          "type": "String"
+        },
+        {
+          "name": "password",
+          "type": "String"
+        },
+        {
+          "name": "addresses",
+          "type": "$Address:List"
+        }
+      ]
+    }
+  ]
+}
