@@ -28,6 +28,7 @@ public class Main
     static {
         COLLECTION_TYPES.put("List", "java.util.List");
         COLLECTION_TYPES.put("Set", "java.util.Set");
+        COLLECTION_TYPES.put("Map", "java.util.Map");
     }
     public static void main (String[] args)
     {
@@ -57,11 +58,11 @@ public class Main
             ctx.put("ClassNameUpper", model.getName());
             ctx.put("ModelType", model.getType());
             ctx.put("Imports", importStatements);
+            updateAttributes(model, modelList, importStatements);
             Map<String, Attribute> attrMap = model.getAttributes().stream()
-                                .collect(Collectors.toMap(Attribute::getName, Function.identity()));
-            updateAttributes(attrMap, modelList, importStatements);
+                    .collect(Collectors.toMap(Attribute::getName, Function.identity()));
             ctx.put("attrMap", attrMap);
-            String path = "/home/cpuser/mslearn/model-gen/src/main/java/com/msnishan/gen/" + model.getName() + "DTO" + ".java";
+            String path = "/home/ksaleh/project-march/model-gen/src/main/java/com/msnishan/gen/" + model.getName() + "DTO" + ".java";
             try (PrintWriter pt = new PrintWriter(path)) {
                 modelTemplate.merge(ctx, pt);
             }
@@ -73,31 +74,45 @@ public class Main
 
     }
 
-    private static void updateAttributes(Map<String, Attribute> attrMap,
-                                          ModelList modelList, StringBuilder importStatements) {
+    private static void updateAttributes(Model model, ModelList modelList, StringBuilder importStatements) {
+
+        Map<String, Attribute> attrMap = model.getAttributes().stream()
+                .collect(Collectors.toMap(Attribute::getName, Function.identity()));
+
         for (Map.Entry<String, Attribute> entry : attrMap.entrySet())
         {
-            if (entry.getValue().getType().startsWith("$")) {
+            if (entry.getValue().getType().contains("$")) {
+                String modelName = entry.getValue().getType().contains(":") ?
+                            entry.getValue().getType().substring(1, entry.getValue().getType().indexOf(":"))
+                                    : entry.getValue().getType().substring(1);
                 Model targetModel = modelList.getModels().stream()
-                                    .filter( model -> model.getName().equals(getAttributeName(entry, importStatements)))
+                                    .filter( mod -> mod.getName().equals(modelName))
                                     .findFirst().get();
-                
-                entry.getValue().setType(targetModel.getName() + targetModel.getType());
+                updateImportStatement(model, targetModel, importStatements);
+                entry.getValue().setType(entry.getValue().getType().substring(1)
+                        .replace(modelName, targetModel.getName() + targetModel.getType()));
+            }
+            if (entry.getValue().getType().contains(":")) {
+                String genericType = entry.getValue().getType().substring(entry.getValue().getType().indexOf(":") + 1);
+                String modelType = entry.getValue().getType().substring(0, entry.getValue().getType().indexOf(":"));
+                updateImportStatement(genericType, importStatements);
+                entry.getValue().setType(MessageFormat.format("{0}<{1}>", genericType, modelType));
             }
         }
-    }                                   
-
-    private static String getAttributeName(Map.Entry<String, Attribute> entry, StringBuilder importStatements) {
-        
-        String modelName = entry.getValue().getType().substring(1);
-        if (modelName.contains(":")) {
-            String collectionType = modelName.substring(modelName.indexOf(":") + 1);
-            importStatements.append(MessageFormat.format("import {0};\n", COLLECTION_TYPES.get(collectionType)));
-            entry.getValue().setType(MessageFormat.format("{0}<{1}>",
-                                  collectionType, modelName.substring(0, modelName.lastIndexOf(":"))));
-            return modelName.substring(0, modelName.lastIndexOf(":"));
-            
-        }
-        return modelName;
     }
+
+    private static void updateImportStatement(String genericType, StringBuilder importStatements) {
+        String importStatement = MessageFormat.format("import {0};\n", COLLECTION_TYPES.get(genericType));
+        if (!importStatements.toString().contains(importStatement)) {
+            importStatements.append(importStatement);
+        }
+    }
+
+    private static void updateImportStatement(Model model, Model targetModel, StringBuilder importStatements) {
+        if (!targetModel.getPackageName().equals(model.getPackageName())) {
+            importStatements.append(MessageFormat.format("import {0}.{1}{2};\n",
+                    targetModel.getPackageName(), targetModel.getName(), targetModel.getType()));
+        }
+    }
+
 }
