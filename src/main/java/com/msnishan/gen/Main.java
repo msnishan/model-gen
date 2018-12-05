@@ -6,6 +6,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static jdk.nashorn.internal.codegen.OptimisticTypesPersistence.load;
 
 /**
  *
@@ -32,6 +35,10 @@ public class Main
     }
     public static void main (String[] args)
     {
+
+        Yaml yaml = new Yaml();
+        Map<String, Object> models = yaml.load(Main.class.getClassLoader().getResourceAsStream("models2.yml"));
+        
 
         ModelList modelList = null;
         try

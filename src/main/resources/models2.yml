@@ -1,0 +1,33 @@
+basePackage: com.msnishan.gen
+models:
+  Address:
+    package: com.msnishan.gen
+    type: DTO
+    attributes:
+      addressLine1:
+        type: String
+        jsonAttributeName: AddressLine1
+      addressLine2:
+        type: String
+        jsonAttributeName: AddressLine2
+      pinCode:
+        type: long
+        jsonAttributeName: PinCode
+  User:
+    package: com.msnishan.gen
+    type: DTO
+    attributes:
+      firstName:
+        type: String
+      lastName:
+        type: String
+      mailId:
+        type: String
+      password:
+        type: String
+      addresses:
+        jsonAttributeName: addressList
+        type: "${Address}:List"
+      addressMap:
+        jsonAttributeName: addressMap
+        type: "[String:${Address}]"
