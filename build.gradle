@@ -9,6 +9,8 @@ repositories {
     mavenCentral()
 }
 
+sourceSets.main.java.srcDirs+='src/main/javaGen'
+
 dependencies {
     compile('org.apache.velocity:velocity-engine-core:2.0')
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.4'

@@ -1,5 +1,6 @@
 .gradle
 /build/
+/src/main/javaGen/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### STS ###

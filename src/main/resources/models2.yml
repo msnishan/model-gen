@@ -27,7 +27,4 @@ models:
         type: String
       addresses:
         jsonAttributeName: addressList
-        type: "${Address}:List"
-      addressMap:
-        jsonAttributeName: addressMap
-        type: "[String:${Address}]"
+        type: "$Address:List"

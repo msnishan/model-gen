@@ -47,12 +47,7 @@
         {
           "name": "addresses",
           "jsonAttributeName": "addressList",
-          "type": "${Address}:List"
-        },
-        {
-          "name": "addressSet",
-          "jsonAttributeName": "addressSet",
-          "type": "[String:${Address}]"
+          "type": "$Address:List"
         }
       ]
     }
