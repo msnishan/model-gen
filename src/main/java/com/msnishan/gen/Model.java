@@ -24,5 +24,6 @@ public class Model
     private String packageName;
     private String name;
     private String type;
+    private String superType;
     private List<Attribute> attributes;
 }
