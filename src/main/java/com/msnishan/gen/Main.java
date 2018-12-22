@@ -23,16 +23,18 @@ public class Main
 {
     private static final Map<String, String> COLLECTION_TYPES = new HashMap<>();
     private static final String BASE_LOCATION = System.getenv("project.loc");
+    private static final String JAVA_GEN_PATH = "/src/main/javaGen/";
+
     static {
         COLLECTION_TYPES.put("List", "java.util.List");
         COLLECTION_TYPES.put("Set", "java.util.Set");
         COLLECTION_TYPES.put("Map", "java.util.Map");
     }
-    public static void main (String[] args)
-    {
+    public static void main (String[] args) throws FileNotFoundException {
         String baseLocation = args.length != 0 ? args[0] : BASE_LOCATION;
+        String modelMetadataFile = "models.yml";
         Yaml yaml = new Yaml();
-        Map<String, Object> models = yaml.load(Main.class.getClassLoader().getResourceAsStream("models2.yml"));
+        Map<String, Object> models = yaml.load(new FileInputStream(baseLocation + "/src/main/resources/" + modelMetadataFile));
 
         ModelList modelList;
 
@@ -60,7 +62,7 @@ public class Main
             Map<String, Attribute> attrMap = model.getAttributes().stream()
                     .collect(Collectors.toMap(Attribute::getName, Function.identity()));
             ctx.put("attrMap", attrMap);
-            String path = baseLocation +"/src/main/javaGen/" + packageName.replace(".", "/");
+            String path = baseLocation + JAVA_GEN_PATH + packageName.replace(".", "/");
 
             if (!new File(path).exists()) {
                 new File(path).mkdirs();
