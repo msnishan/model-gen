@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class ${ClassNameUpper}${ModelType} {
+public class ${ClassNameUpper}${ModelType} ${SuperType} {
    #foreach ($attrEntry in $attrMap.entrySet())
     #if($attrEntry.value.jsonAttributeName)
     @JsonProperty("$attrEntry.value.jsonAttributeName")

@@ -16,12 +16,12 @@ public class EnvelopeConverter {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public <T> T extractFromEnvelop(RequestEnvelope envelope, Class<T> clazz) {
+    public static <T> T extractFromEnvelop(RequestEnvelope envelope, Class<T> clazz) {
         Map<String, Object> data = envelope.getData();
         return OBJECT_MAPPER.convertValue(data, clazz);
     }
 
-    public ResponseEnvelope createResponseEnvelop(RequestContext requestContext, List<ResponseError> errors,
+    public static ResponseEnvelope createResponseEnvelop(RequestContext requestContext, List<ResponseError> errors,
                                                   String responseCode, Object data) {
         return new ResponseEnvelope(
                     new ResponseContext(requestContext.getRequestId(), requestContext.getClientId()),

@@ -1,5 +1,6 @@
 package com.msnishan.gen;
 
+import com.msnishan.gen.type.base.BaseDTO;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -27,11 +28,14 @@ public class Main
     private static final Map<String, String> COLLECTION_TYPES = new HashMap<>();
     private static final String BASE_LOCATION = System.getenv("project.loc");
     private static final String JAVA_GEN_PATH = "/src/main/javaGen/";
+    private static final Map<String, Class> BASE_TYPES = new HashMap<>();
 
     static {
         COLLECTION_TYPES.put("List", "java.util.List");
         COLLECTION_TYPES.put("Set", "java.util.Set");
         COLLECTION_TYPES.put("Map", "java.util.Map");
+
+        BASE_TYPES.put("DTO", BaseDTO.class);
 
     }
     public static void main (String[] args) throws FileNotFoundException {
@@ -66,6 +70,7 @@ public class Main
                     .collect(Collectors.toMap(Attribute::getName, Function.identity()));
             ctx.put("attrMap", attrMap);
             ctx.put("ModelType", model.getType());
+            updateSuperType(model, importStatements);
             ctx.put("SuperType", model.getSuperType() != null ? model.getSuperType() : "");
             String path = baseLocation + JAVA_GEN_PATH + packageName.replace(".", "/");
 
@@ -83,6 +88,14 @@ public class Main
             }
         }
 
+    }
+
+    private static void updateSuperType(Model model, StringBuilder importStatements) {
+        if (BASE_TYPES.containsKey(model.getType())) {
+            Class clazz = BASE_TYPES.get(model.getType());
+            model.setSuperType(MessageFormat.format("extends {0}", clazz.getSimpleName()));
+            importStatements.append(MessageFormat.format("import {0};\n", clazz.getName()));
+        }
     }
 
     private static ModelList retrieveModelsList(Map<String,Object> models) {
