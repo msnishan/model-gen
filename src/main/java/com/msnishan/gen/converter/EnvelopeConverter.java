@@ -22,10 +22,11 @@ public class EnvelopeConverter {
     }
 
     public static ResponseEnvelope createResponseEnvelop(RequestContext requestContext, List<ResponseError> errors,
-                                                  String responseCode, Object data) {
+                                                         String responseCode, Object data) {
         return new ResponseEnvelope(
-                    new ResponseContext(requestContext.getRequestId(), requestContext.getClientId()),
-                    LocalDateTime.now(), errors, responseCode,
-                    OBJECT_MAPPER.convertValue(data, new TypeReference<Map<String, Object>>() {}));
+                new ResponseContext(requestContext.getRequestId(), requestContext.getClientId()),
+                LocalDateTime.now(), errors, responseCode,
+                OBJECT_MAPPER.convertValue(data, new TypeReference<Map<String, Object>>() {
+                }));
     }
 }

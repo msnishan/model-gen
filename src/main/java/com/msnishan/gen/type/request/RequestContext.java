@@ -17,4 +17,5 @@ public class RequestContext {
     private String requestId;
     private String userId;
     private String clientId;
+    private String companyId;
 }
