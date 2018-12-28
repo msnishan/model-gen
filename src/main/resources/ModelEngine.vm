@@ -1,7 +1,8 @@
 ${Package}
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.EqualsAndHashCode(callSuper = true);
+import io.swagger.annotations.ApiModel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,8 +14,9 @@ import javax.annotation.Generated;
 @Generated("${GeneratedStatement}")
 @Setter
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
+@ApiModel("${ClassNameUpper}")
 public class ${ClassNameUpper}${ModelType} ${SuperType} {
    #foreach ($attrEntry in $attrMap.entrySet())
     #if($attrEntry.value.jsonAttributeName)
