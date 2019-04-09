@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Setter
@@ -22,7 +23,7 @@ import java.util.Map;
 public class RequestEnvelope {
     private RequestContext context;
     private LocalDateTime requestDateTime;
-    private Map<String, Object> data;
+    private Map<String, Object> data = new HashMap<>();
 
     @JsonAnyGetter
     public Map<String, Object> getData() {
@@ -30,7 +31,7 @@ public class RequestEnvelope {
     }
 
     @JsonAnySetter
-    public void setData(Map<String, Object> data) {
-        this.data = data;
+    public void setData(String key, Object data) {
+        this.data.put(key, data);
     }
 }

@@ -14,10 +14,12 @@ import java.util.Map;
 
 public class EnvelopeConverter {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().findAndRegisterModules();
 
     public static <T> T extractFromEnvelop(RequestEnvelope envelope, Class<T> clazz) {
         Map<String, Object> data = envelope.getData();
+        data.put("context", envelope.getContext());
+        data.put("requestDateTime", envelope.getRequestDateTime());
         return OBJECT_MAPPER.convertValue(data, clazz);
     }
 
